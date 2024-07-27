@@ -52,65 +52,60 @@ const registeruser = async function (req, res) {
 
 
 //LoginUser
-const userLogin = async function (req, res) {
+const userLogin = async (req, res) => {
     try {
         const { email, password, role } = req.body;
-        if (!email && !password || !role) {
-            console.log("Field Are required");
-            return res.status(400).json({
-                message: "Login fail",
-                success: false
-            })
-        }
 
-        //email check
-        let user = await User.findOne(email);
+        if (!email || !password || !role) {
+            return res.status(400).json({
+                message: "Something is missing",
+                success: false
+            });
+        };
+        let user = await User.findOne({ email });
         if (!user) {
-            console.log("email does not exist");
             return res.status(400).json({
-                message: "email does not exist",
-                success: false
+                message: "Incorrect email or password.",
+                success: false,
             })
         }
-
-        //password check
-        const passwordCheck = await bcrypt.compare(password, User.password);
-        if (!passwordCheck) {
-            return req.status(400).json({
-                message: "password is incorrect",
+        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        if (!isPasswordMatch) {
+            return res.status(400).json({
+                message: "Incorrect email or password.",
+                success: false,
+            })
+        };
+        // check role is correct or not
+        if (role !== user.role) {
+            return res.status(400).json({
+                message: "Account doesn't exist with current role.",
                 success: false
             })
-        }
-
-        //jsonwebtoken
-
+        };
 
         const tokenData = {
             userId: user._id
         }
-        const token = jwt.sign(tokenData, process.env.SECRET_KEY, { expireIn: "2d" })
+        const token = await jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: '1d' });
 
         user = {
             _id: user._id,
             fullname: user.fullname,
             email: user.email,
-            phoneNumber: user.phone,
+            phoneNumber: user.phoneNumber,
             role: user.role,
             profile: user.profile
         }
 
-        //cookie
-        res.status(200).cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: 'strict' }.json({
-            message: `Welcone ${User.fullname}`,
+        return res.status(200).cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpsOnly: true, sameSite: 'strict' }).json({
+            message: `Welcome back ${user.fullname}`,
             user,
             success: true
-        }))
+        })
     } catch (error) {
-        console.log("Login Fail due to error", error);
+        console.log(error);
     }
-
-
-
 }
 
 //logout 
