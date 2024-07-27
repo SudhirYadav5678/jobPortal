@@ -1,6 +1,8 @@
 import dotenv from "dotenv"
 import connectDB from "./utiles/connectionDB.js";
 import { app } from './app.js'
+import UserRouter from "./routes/user.route.js";
+
 
 dotenv.config({
     path: './.env'
@@ -17,3 +19,6 @@ connectDB()
     .catch((error) => {
         console.log("MONGO db connection failed !!! ", error);
     })
+
+// router
+app.use("/api/v1/user", UserRouter);
