@@ -10,7 +10,7 @@ const userSchema = new Schema({ //mongoose.schema
         required: [true, "Email is required"],
         unique: true,
     },
-    phone: {
+    phoneNumber: {
         type: Number,
         required: [true, "Phone is required"],
     },
@@ -21,7 +21,7 @@ const userSchema = new Schema({ //mongoose.schema
     role: {
         type: String,
         required: [true],
-        enum: ["Student", "Recuriter"] // used for the options
+        enum: ["student", "recuriter"] // used for the options
     },
     profile: {
         bio: { type: String },

@@ -5,8 +5,9 @@ import jwt from "jsonwebtoken"
 // register user 
 const registeruser = async function (req, res) {
     try {
-        const { fullname, email, phone, password, role } = req.body //user details.
-        if (!fullname || !email || !phone || !password || !role) {
+        const { fullname, email, phoneNumber, password, role } = req.body //user details.
+        console.log(fullname, email, phoneNumber, password, role);
+        if (!fullname || !email || !phoneNumber || !password || !role) {
             console.log("Please provide complete inforamtion in the given filed.");
             return res.status(400).json({
                 message: "Something is missing in user register",
@@ -32,7 +33,7 @@ const registeruser = async function (req, res) {
         await User.create({
             fullname,
             email,
-            phone,
+            phoneNumber,
             password: passwordBcrypt,
             role
         })
