@@ -6,8 +6,8 @@ import getDataUri from "../utiles/datauri.js"
 // register user 
 const registeruser = async function (req, res) {
     try {
-        const { fullname, email, phoneNumber, password, role } = req.body //user details.
-        console.log(fullname, email, phoneNumber, password, role);
+        const { fullname, email, password, phoneNumber, role } = req.body //user details.
+        console.log(fullname, email, password, phoneNumber, role);
         if (!fullname || !email || !phoneNumber || !password || !role) {
             console.log("Please provide complete inforamtion in the given filed.");
             return res.status(400).json({
@@ -29,6 +29,7 @@ const registeruser = async function (req, res) {
 
         //password hash
         const passwordBcrypt = await bcrypt.hash(password, 10);
+
 
         //User register in database
         await User.create({
