@@ -17,6 +17,11 @@ const registeruser = async function (req, res) {
             })
         };
 
+        //files upload
+        const files = req.file;
+        const fileUri = getDataUri(files)
+        const clooudResponces = await cloudinary.uploader.upload(fileUri.content)
+
         //email check
         const user = await User.findOne({ email });
         if (user) {
@@ -37,7 +42,10 @@ const registeruser = async function (req, res) {
             email,
             phoneNumber,
             password: passwordBcrypt,
-            role
+            role,
+            profile: {
+                profilePhoto: clooudResponces.secure_url
+            }
         })
         return res.status(200).json({
             message: "User register successfully",
@@ -45,11 +53,11 @@ const registeruser = async function (req, res) {
         })
     } catch (error) {
         console.log("Register Fail!!!", error);
-        // res.status(400).json({
-        //     message: "User register Fail",
-        //     status: 400,
-        //     success: false
-        // })
+        res.status(400).json({
+            message: "User register Fail",
+            status: 400,
+            success: false
+        })
     }
 }
 
@@ -90,7 +98,7 @@ const userLogin = async (req, res) => {
         const tokenData = {
             userId: user._id
         }
-        const token = await jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: '1d' });
+        const token = jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: '1d' });
 
         user = {
             _id: user._id,
