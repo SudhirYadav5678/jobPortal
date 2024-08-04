@@ -2,6 +2,10 @@ import dotenv from "dotenv"
 import connectDB from "./utiles/connectionDB.js";
 import { app } from './app.js'
 import UserRouter from "./routes/user.route.js";
+import JobRouter from "./routes/job.route.js"
+import CompanayRouter from "./routes/company.route.js"
+import ApplicationRouter from "./routes/application.route.js"
+
 
 
 dotenv.config({
@@ -22,3 +26,6 @@ connectDB()
 
 // router
 app.use("/api/v1/user", UserRouter);
+app.use("/api/v1/job", JobRouter);
+app.use("/api/v1/job", CompanayRouter);
+app.use("/api/v1/job", ApplicationRouter);
