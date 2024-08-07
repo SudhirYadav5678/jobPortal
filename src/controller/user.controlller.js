@@ -20,7 +20,7 @@ const registeruser = async function (req, res) {
         //files upload
         const files = req.file;
         const fileUri = getDataUri(files)
-        const clooudResponces = await cloudinary.uploader.upload(fileUri.content)
+        const clooudResponces = await cloudinary.uploader.upload(fileUri?.content)
 
         //email check
         const user = await User.findOne({ email });
