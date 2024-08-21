@@ -172,6 +172,7 @@ const updateProfile = async (req, res) => {
         if (cloudResponse) {
             user.profile.resume = cloudResponse.secure_url // save the cloudinary url
             user.profile.resumeOriginalName = file.originalname // Save the original file name
+
         }
 
 
@@ -192,7 +193,10 @@ const updateProfile = async (req, res) => {
             success: true
         })
     } catch (error) {
-        console.log(error);
+        return res.status(400).json({
+            message: "Profile updated unsuccessfully.",
+            success: false
+        })
     }
 }
 export { registeruser, userLogin, userlogout, updateProfile }
