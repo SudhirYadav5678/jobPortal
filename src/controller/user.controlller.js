@@ -3,11 +3,12 @@ import bcrypt from "bcryptjs"
 import { User } from "../models/user.models.js"
 import jwt from "jsonwebtoken"
 import getDataUri from "../utiles/datauri.js"
+import cloudinary from '../utiles/cloudinary.js'
 // register user 
 const registeruser = async function (req, res) {
     try {
         const { fullname, email, password, phoneNumber, role } = req.body //user details.
-        console.log(fullname, email, password, phoneNumber, role);
+
         if (!fullname || !email || !phoneNumber || !password || !role) {
             console.log("Please provide complete inforamtion in the given filed.");
             return res.status(400).json({
@@ -21,6 +22,7 @@ const registeruser = async function (req, res) {
         const files = req.file;
         const fileUri = getDataUri(files)
         const clooudResponces = await cloudinary.uploader.upload(fileUri?.content)
+
 
         //email check
         const user = await User.findOne({ email });
@@ -115,7 +117,10 @@ const userLogin = async (req, res) => {
             success: true
         })
     } catch (error) {
-        console.log(error);
+        return res.status(400).json({
+            message: "Error While login",
+            success: false,
+        })
     }
 }
 
@@ -157,14 +162,13 @@ const updateProfile = async (req, res) => {
                 success: false
             })
         }
-        // updating data
+
         if (fullname) user.fullname = fullname
         if (email) user.email = email
         if (phoneNumber) user.phoneNumber = phoneNumber
         if (bio) user.profile.bio = bio
         if (skills) user.profile.skills = skillsArray
 
-        // resume comes later here...
         if (cloudResponse) {
             user.profile.resume = cloudResponse.secure_url // save the cloudinary url
             user.profile.resumeOriginalName = file.originalname // Save the original file name

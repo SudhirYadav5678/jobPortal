@@ -21,7 +21,7 @@ const userSchema = new Schema({ //mongoose.schema
     role: {
         type: String,
         required: [true],
-        enum: ["student", "recuriter"] // used for the options
+        enum: ["student", 'recuriter'] // used for the options
     },
     profile: {
         bio: { type: String },

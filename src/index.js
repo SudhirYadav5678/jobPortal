@@ -27,5 +27,5 @@ connectDB()
 // router
 app.use("/api/v1/user", UserRouter);
 app.use("/api/v1/job", JobRouter);
-app.use("/api/v1/job", CompanayRouter);
-app.use("/api/v1/job", ApplicationRouter);
+app.use("/api/v1/company", CompanayRouter);
+app.use("/api/v1/application", ApplicationRouter);

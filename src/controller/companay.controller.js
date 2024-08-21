@@ -3,8 +3,11 @@ import getDataUri from "../utiles/datauri.js";
 import cloudinary from "../utiles/cloudinary.js";
 
 export const registerCompany = async (req, res) => {
+    //console.log("hello");
+
     try {
         const { companyName } = req.body;
+
         if (!companyName) {
             return res.status(400).json({
                 message: "Company name is required.",
@@ -21,7 +24,10 @@ export const registerCompany = async (req, res) => {
         company = await Company.create({
             name: companyName,
             userId: req.id
+
         });
+        console.log(req.id);
+
 
         return res.status(201).json({
             message: "Company registered successfully.",
@@ -29,7 +35,10 @@ export const registerCompany = async (req, res) => {
             success: true
         })
     } catch (error) {
-        console.log(error);
+        return res.status(409).json({
+            message: "Company registered unsuccessfully.",
+            success: false
+        })
     }
 }
 export const getCompany = async (req, res) => {
@@ -70,13 +79,19 @@ export const getCompanyById = async (req, res) => {
     }
 }
 export const updateCompany = async (req, res) => {
+    //console.log("Hello");
+
     try {
         const { name, description, website, location } = req.body;
+        //console.log(name, description, website, location);
 
         const file = req.file;
+        console.log(file);
 
         const fileUri = getDataUri(file);
         const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+        console.log(cloudResponse);
+
         const logo = cloudResponse.secure_url;
 
         const updateData = { name, description, website, location, logo };
